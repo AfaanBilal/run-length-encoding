@@ -2,7 +2,7 @@
     Run-Length Encoding
     (c) Afaan Bilal
 
-    ENCODER
+    DECODER
 */
 
 #include <iostream>
@@ -14,11 +14,9 @@
 
 using namespace std;
 
-string to_string(int t) 
+int to_int(string t) 
 {
-    ostringstream os;
-    os << t;
-    return os.str();
+    return atoi(t.c_str());
 }
 
 int main()
@@ -30,7 +28,7 @@ int main()
 
     cout << "Run-Length Encoding" << endl;
     cout << "https://github.com/AfaanBilal/run-length-encoding" << endl << endl;
-    cout << "ENCODER" << endl;
+    cout << "DECODER" << endl;
     cout << "Enter input filename : ";
     cin  >> filename;
     cout << "Enter output filename: ";
@@ -51,49 +49,50 @@ int main()
 
         in.read(&contents[0], contents.size());
 
-        std::vector<char> compressed;
+        std::vector<char> decompressed;
 
-        int cCount = 1;
-        char prevChar = 0;
+        char ch = 0;
+        string countStr;
 
         for(const char& c : contents)
         {
-            if (c == prevChar)
-                cCount++;
-            else if (prevChar != 0)
+            if (isalpha(c))
             {
-                compressed.push_back(prevChar);
+                if (ch != 0)
+                {
+                    int cCount = to_int(countStr);
+                    countStr = "";
+                    for (int i = 0; i < cCount; i++)
+                        decompressed.push_back(ch);
+                }
 
-                string count_str = to_string(cCount);
-                for(const char& cc : count_str)
-                    compressed.push_back(cc);
-
-                cCount = 1;
+                ch = c;
             }
-
-            prevChar = c;
+            else
+            {
+                countStr.push_back(c);
+            }
         }
 
-        compressed.push_back(prevChar);
-
-        string count_str = to_string(cCount);
-        for(const char& cc : count_str)
-            compressed.push_back(cc);
+        int cCount = to_int(countStr);
+        countStr = "";
+        for (int i = 0; i < cCount; i++)
+            decompressed.push_back(ch);
 
         std::string original_str(contents.begin(), contents.end());
-        std::string compressed_str(compressed.begin(), compressed.end());
+        std::string decompressed_str(decompressed.begin(), decompressed.end());
 
         ofstream outf(outputfile, ios::out | ios::binary);
         if (outf.is_open())
-            outf << compressed_str;
+            outf << decompressed_str;
         else
             cout << "Error: could not open output file: " << outputfile;
 
-        int comp_ratio = (float)compressed_str.length() / original_str.length() * 100;
+        int comp_ratio = (float)original_str.length() / decompressed_str.length() * 100;
 
         cout << endl;
-        cout << "Original  : "  << original_str << endl;
-        cout << "Compressed: " << compressed_str << endl;
+        cout << "Original    : "  << original_str << endl;
+        cout << "Decompressed: " << decompressed_str << endl;
         cout << "Compression ratio: " << comp_ratio << "%" << endl;
     }
     else
