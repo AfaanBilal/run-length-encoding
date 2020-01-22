@@ -1,8 +1,7 @@
 Run-Length Encoding
 ===================
 
-Author: **Afaan Bilal ([@AfaanBilal](https://github.com/AfaanBilal))**   
-Author URL: **[Google+](https://google.com/+AfaanBilal)**
+Author: **[Afaan Bilal](https://afaan.me)**  
 
 ## Introduction
 **Run-Length Encoding** is a program in C++ implementing the compression algorithm [Run-Length Encoding](https://en.wikipedia.org/wiki/Run-length_encoding).
